@@ -1,4 +1,6 @@
 services:
+
+  # ── PostgreSQL ─────────────────────────────────────────────
   postgres:
     image: postgres:16
     container_name: ahorro-mindset-postgres
@@ -11,6 +13,43 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - ahorro_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U root -d ahorro-mindset"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
+  # ── Spring Boot Backend ────────────────────────────────────
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ahorro-mindset-backend
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/ahorro-mindset
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_SHOW_SQL: false
+      APP_JWT_SECRET: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      APP_JWT_EXPIRATION: 86400000
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - ahorro_network
+
+# ── Volúmenes ──────────────────────────────────────────────
 volumes:
   postgres_data:
+
+# ── Red ────────────────────────────────────────────────────
+networks:
+  ahorro_network:
+    driver: bridge
