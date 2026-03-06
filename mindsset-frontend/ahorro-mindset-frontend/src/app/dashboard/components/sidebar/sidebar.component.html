@@ -1,0 +1,33 @@
+<aside class="sidebar" [class.sidebar--expanded]="!collapsed()">
+
+  <button class="sidebar__toggle" (click)="toggle()" aria-label="Toogle menu">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+      <line x1="3" y1="6" x2="21" y2="6"/>
+      <line x1="3" y1="12" x2="21" y2="12"/>
+      <line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+  </button>
+
+  <nav class="sidebar__nav">
+    @for (item of navItems; track item.icon) {
+        <a
+            [routerLink]="item.route"
+            routerLinkActive="sidebar__item--active"
+            [routerLinkActiveOptions]="item.icon === 'home' ? { exact: true } : { exact: false }"
+            class="sidebar__item"
+            [title]="item.label" 
+            >
+             <span class="sidebar__item-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path [attr.d]="item.svgPath"/>
+                </svg>
+             </span>
+             @if (!collapsed()) {
+                <span class="sidebar__item-label">{{item.label}}</span>
+             }       
+        </a>
+    }
+  </nav>
+
+</aside>

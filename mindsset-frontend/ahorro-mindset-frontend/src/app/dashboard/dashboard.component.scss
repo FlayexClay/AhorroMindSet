@@ -1,0 +1,197 @@
+/* ===== LAYOUT GENERAL ===== */
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+  background: radial-gradient(circle at 20% 20%, #0f172a 0%, #050b18 60%);
+  color: #e5e7eb;
+}
+
+/* ===== MAIN ===== */
+.dashboard-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 30px 40px;
+}
+
+/* ===== TOPBAR ===== */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+/* Welcome Badge */
+.welcome-badge {
+  background: linear-gradient(135deg, #14532d, #166534);
+  padding: 18px 28px;
+  border-radius: 16px;
+  font-size: 22px;
+  font-weight: 600;
+  color: #bbf7d0;
+  box-shadow: 0 0 25px rgba(34, 197, 94, 0.25);
+}
+
+/* User Chip */
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 10px 18px;
+  border-radius: 30px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+.user-chip__avatar {
+  background: #22c55e;
+  color: #052e16;
+  font-weight: bold;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-chip__logout {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #9ca3af;
+  transition: 0.2s;
+}
+
+.user-chip__logout:hover {
+  color: #22c55e;
+}
+
+/* ===== CARDS AREA ===== */
+.cards-area {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* ===== CARD BASE ===== */
+.card {
+  background: linear-gradient(145deg, #0f172a, #0b1220);
+  padding: 28px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.05);
+  box-shadow: 0 0 40px rgba(0,0,0,0.6);
+}
+
+/* Card Header */
+.card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  font-size: 15px;
+  color: #9ca3af;
+}
+
+/* ===== WEEK GRID ===== */
+.week-grid {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+/* Day Item */
+.day-item {
+  text-align: center;
+}
+
+.day-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #111827;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+/* Día actual */
+.day-circle--active {
+  background: transparent;
+  border: 2px solid #22c55e;
+  color: #22c55e;
+  box-shadow: 0 0 20px rgba(34, 197, 94, 0.6);
+}
+
+/* Día con ahorro */
+.day-circle--filled {
+  background: #1f2937;
+  color: #e5e7eb;
+}
+
+/* Día vacío */
+.day-circle--empty {
+  opacity: 0.4;
+}
+
+.day-label {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.day-label--active {
+  color: #22c55e;
+  font-weight: 600;
+}
+
+/* ===== CARD ROW ===== */
+.card--row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Meta info */
+.meta-info__title {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* Meta Badge */
+.meta-badge {
+  background: linear-gradient(135deg, #14532d, #166534);
+  padding: 20px 35px;
+  border-radius: 18px;
+  text-align: center;
+  box-shadow: 0 0 25px rgba(34, 197, 94, 0.3);
+}
+
+.meta-badge__amount {
+  font-size: 32px;
+  font-weight: 700;
+  color: #bbf7d0;
+}
+
+.meta-badge__currency {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: #86efac;
+}
+
+/* ===== FOOTER ===== */
+.dashboard-footer {
+  margin-top: auto;
+  text-align: center;
+  padding: 20px;
+  font-size: 12px;
+  color: #4b5563;
+}

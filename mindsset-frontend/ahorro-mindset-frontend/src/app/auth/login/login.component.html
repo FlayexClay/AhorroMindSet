@@ -1,0 +1,218 @@
+<div class="flex h-screen overflow-hidden bg-[#050f0a]">
+
+  <!-- ===== LEFT PANEL ===== -->
+  <div class="relative w-[48%] flex flex-col overflow-hidden"
+       style="background: linear-gradient(145deg, #0b2015 0%, #071409 100%)">
+
+    <!-- Ambient orbs (SCSS handles keyframes) -->
+    <div class="orb orb--1"></div>
+    <div class="orb orb--2"></div>
+    <div class="orb orb--3"></div>
+    <div class="grid-overlay"></div>
+
+    <!-- Content -->
+    <div class="relative z-10 flex flex-col gap-12 flex-1 px-14 py-12">
+
+      <!-- Brand -->
+      <div class="flex items-center gap-3 animate-[fadeInUp_0.6s_ease_both]">
+        <div class="w-11 h-11 flex items-center justify-center rounded-xl border border-[rgba(34,197,94,0.35)]
+                    bg-gradient-to-br from-[rgba(34,197,94,0.25)] to-[rgba(34,197,94,0.1)]
+                    animate-[pulseGlow_4s_ease-in-out_infinite]"
+             style="box-shadow: 0 0 20px rgba(34,197,94,0.2)">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"
+                  fill="rgba(34,197,94,0.2)" stroke="#22c55e" stroke-width="1.5"/>
+            <path d="M12 6v6l4 2" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="12" cy="14" r="2" fill="#22c55e"/>
+          </svg>
+        </div>
+        <span class="font-display text-xl font-bold">
+          <span class="text-white">Ahorro</span><span class="text-[#22c55e]">MindSet</span>
+        </span>
+      </div>
+
+      <!-- Hero -->
+      <div class="animate-[fadeInUp_0.6s_0.1s_ease_both] [animation-fill-mode:both]">
+        <h1 class="font-display font-extrabold leading-[1.05] tracking-tight text-white mb-5"
+            style="font-size: clamp(38px, 4.5vw, 56px)">
+          Tu dinero,<br>
+          bajo <span class="text-[#22c55e]">control</span><br>
+          total.
+        </h1>
+        <p class="text-[rgba(255,255,255,0.55)] text-[15px] leading-relaxed font-light max-w-xs font-body">
+          Registra tus ahorros diarios, visualiza tu
+          progreso y alcanza tus metas financieras mes a mes.
+        </p>
+      </div>
+
+      <!-- Stats -->
+      <div class="flex gap-9 animate-[fadeInUp_0.6s_0.2s_ease_both] [animation-fill-mode:both]">
+        @for (stat of stats; track stat.label) {
+          <div class="flex flex-col gap-1">
+            <span class="font-display font-bold text-[#22c55e] leading-none tracking-tight"
+                  style="font-size: clamp(22px, 2.5vw, 30px)">
+              {{ stat.value }}
+            </span>
+            <span class="text-[10px] font-medium tracking-widest text-[rgba(255,255,255,0.4)] uppercase font-body">
+              {{ stat.label }}
+            </span>
+          </div>
+        }
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="relative z-10 text-center py-5 px-4 border-t border-[rgba(34,197,94,0.12)]
+                text-[10px] tracking-[2px] text-[#64748b] uppercase font-body">
+      FLAYEXCLAY © — AHORRO MINDSET
+    </div>
+
+  </div>
+
+  <!-- ===== RIGHT PANEL ===== -->
+  <div class="flex-1 bg-[#101c17] flex items-center justify-center px-12 py-10 overflow-y-auto">
+
+    <div class="w-full max-w-[420px] animate-[fadeInUp_0.7s_0.15s_ease_both] [animation-fill-mode:both]">
+
+      <!-- Header -->
+      <div class="mb-9">
+        <h2 class="font-display font-bold text-[30px] text-white tracking-tight mb-1.5">
+          Iniciar Sesión
+        </h2>
+        <p class="text-[#94a3b8] text-sm font-light font-body">
+          Ingresa tus credenciales para continuar
+        </p>
+      </div>
+
+      <!-- Error -->
+      @if (errorMessage()) {
+        <div class="flex items-center gap-2.5 px-4 py-3 rounded-xl mb-5 text-[13.5px] font-body
+                    bg-[rgba(239,68,68,0.1)] border border-[rgba(239,68,68,0.3)] text-[#fca5a5]
+                    animate-[fadeIn_0.3s_ease]">
+          <svg class="shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          {{ errorMessage() }}
+        </div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate class="space-y-5">
+
+        <!-- Correo -->
+        <div>
+          <label class="block text-[10.5px] font-semibold tracking-[1.5px] uppercase mb-2 font-body"
+                 style="color: #6b7e75" for="correo">
+            Correo Electrónico
+          </label>
+          <div class="input-wrap" [class.error]="correo.invalid && correo.touched">
+            <span class="px-4 flex items-center text-[rgba(255,255,255,0.3)] shrink-0">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="4" width="20" height="16" rx="2"/>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+              </svg>
+            </span>
+            <input id="correo" type="email" class="field-input"
+                   placeholder="tu@correo.com"
+                   formControlName="correo"
+                   autocomplete="email">
+          </div>
+          @if (correo.invalid && correo.touched) {
+            <p class="mt-1.5 text-xs text-[#fca5a5] font-body">
+              @if (correo.errors?.['required']) { El correo es requerido }
+              @else { Ingresa un correo válido }
+            </p>
+          }
+        </div>
+
+        <!-- Contraseña -->
+        <div>
+          <label class="block text-[10.5px] font-semibold tracking-[1.5px] uppercase mb-2 font-body"
+                 style="color: #6b7e75" for="password">
+            Contraseña
+          </label>
+          <div class="input-wrap" [class.error]="password.invalid && password.touched">
+            <span class="px-4 flex items-center text-[rgba(255,255,255,0.3)] shrink-0">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </span>
+            <input id="password" [type]="showPassword() ? 'text' : 'password'"
+                   class="field-input" placeholder="••••••••"
+                   formControlName="password"
+                   autocomplete="current-password">
+            <button type="button"
+                    class="px-4 flex items-center text-[rgba(255,255,255,0.3)] hover:text-[#22c55e] transition-colors duration-200 bg-transparent border-none cursor-pointer"
+                    (click)="togglePassword()">
+              @if (showPassword()) {
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+                  <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                  <line x1="1" y1="1" x2="23" y2="23"/>
+                </svg>
+              } @else {
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              }
+            </button>
+          </div>
+          @if (password.invalid && password.touched) {
+            <p class="mt-1.5 text-xs text-[#fca5a5] font-body">
+              @if (password.errors?.['required']) { La contraseña es requerida }
+              @else { Mínimo 6 caracteres }
+            </p>
+          }
+        </div>
+
+        <!-- Remember / Forgot -->
+        <div class="flex items-center justify-between pt-1">
+          <label class="flex items-center gap-2.5 cursor-pointer select-none">
+            <input type="checkbox" class="hidden" #rememberInput>
+            <div class="w-[18px] h-[18px] rounded-[5px] border border-[rgba(34,197,94,0.2)] bg-[#0e1c14]
+                        flex items-center justify-center transition-all duration-200"
+                 [class.bg-[#22c55e]]="rememberInput.checked"
+                 [class.border-[#22c55e]]="rememberInput.checked">
+            </div>
+            <span class="text-[13.5px] text-[rgba(255,255,255,0.55)] font-body">Recordarme</span>
+          </label>
+          <a href="#" class="text-[13.5px] text-[#22c55e] font-medium font-body hover:text-[#4ade80] transition-colors duration-200 no-underline">
+            ¿Olvidaste tu contraseña?
+          </a>
+        </div>
+
+        <!-- Submit -->
+        <div class="pt-2">
+          <button type="submit" class="btn-primary" [disabled]="isLoading()">
+            @if (isLoading()) {
+              <span class="w-[18px] h-[18px] rounded-full border-2 border-[rgba(0,0,0,0.2)] border-t-black
+                           animate-[spin_0.7s_linear_infinite]"></span>
+              Verificando...
+            } @else {
+              Ingresar a mi cuenta
+            }
+          </button>
+        </div>
+
+      </form>
+
+      <!-- Register link -->
+      <div class="mt-8 text-center">
+        <p class="text-[10px] tracking-[2px] text-[#64748b] uppercase font-body mb-2.5">¿Nuevo aquí?</p>
+        <p class="text-sm text-[rgba(255,255,255,0.5)] font-light font-body">
+          ¿No tienes cuenta?
+          <a routerLink="/auth/register"
+             class="text-[#22c55e] font-semibold hover:text-[#4ade80] transition-colors duration-200 no-underline ml-1">
+            Crear cuenta gratis
+          </a>
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+</div>

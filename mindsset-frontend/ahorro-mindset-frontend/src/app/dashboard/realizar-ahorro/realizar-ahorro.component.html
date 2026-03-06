@@ -1,0 +1,250 @@
+<div class="dashboard-layout">
+
+  <!-- SIDEBAR -->
+  <app-sidebar></app-sidebar>
+
+  <!-- MAIN -->
+  <main class="dashboard-main">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="welcome-badge animate-[fadeInUp_0.5s_ease_both]">
+        <span class="welcome-badge__text font-display">Realizar Ahorro</span>
+      </div>
+      <div class="user-chip animate-[fadeInUp_0.5s_0.1s_ease_both] [animation-fill-mode:both]">
+        <div class="user-chip__avatar font-display">{{ initiales() }}</div>
+        <span class="user-chip__name font-body">{{ user?.nombre }} {{ user?.apellidos }}</span>
+        <button class="user-chip__logout" (click)="logout()" title="Cerrar sesión">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <section class="content-area">
+
+      <!-- Section subtitle -->
+      <div class="section-header animate-[fadeInUp_0.5s_0.1s_ease_both] [animation-fill-mode:both]">
+        <h2 class="section-header__title font-display">
+          Selecciona uno de tus planes para<br>
+          <span class="section-header__sub font-body">realizar el registro de ahorro</span>
+        </h2>
+      </div>
+
+      <!-- Success banner -->
+      @if (successMsg()) {
+        <div class="alert alert--success animate-[fadeInUp_0.3s_ease]">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          {{ successMsg() }}
+        </div>
+      }
+
+      <!-- Loading skeletons -->
+      @if (isLoading()) {
+        <div class="planes-grid">
+          @for (i of [1,2,3]; track i) {
+            <div class="plan-card plan-card--skeleton"></div>
+          }
+        </div>
+      }
+
+      <!-- Empty state -->
+      @else if (planes().length === 0) {
+        <div class="empty-state animate-[fadeInUp_0.5s_0.2s_ease_both] [animation-fill-mode:both]">
+          <div class="empty-state__icon">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <p class="font-body text-[rgba(255,255,255,0.4)] text-sm text-center">
+            No tienes planes de ahorro aún.<br>Crea uno desde la sección Plan Ahorro.
+          </p>
+        </div>
+      }
+
+      <!-- Plans list -->
+      @else {
+        <div class="planes-grid">
+          @for (plan of planes(); track plan.id; let i = $index) {
+            <div class="plan-card animate-[fadeInUp_0.5s_ease_both] [animation-fill-mode:both]"
+                 [style.animation-delay]="(i * 0.08) + 's'"
+                 [class.plan-card--done]="plan.metaAlcanzada"
+                 (click)="seleccionarPlan(plan)"
+                 [title]="plan.metaAlcanzada ? 'Meta ya alcanzada' : 'Clic para registrar ahorro'">
+
+              <!-- Card header -->
+              <div class="plan-card__header">
+                <div class="plan-card__header-left">
+                  <span class="plan-card__label font-body">META — {{ mesEs(plan.mes) }}</span>
+                  <span class="plan-card__amount font-display">
+                    {{ simbolo(plan.tipoMoneda) }} {{ plan.metaMensual | number:'1.2-2' }}
+                  </span>
+                </div>
+                <div class="plan-card__header-right">
+                  <span class="plan-card__moneda font-body">{{ plan.tipoMoneda }}</span>
+                  @if (plan.metaAlcanzada) {
+                    <span class="plan-card__badge plan-card__badge--done">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                        <polyline points="20 6 9 17 4 12"/>
+                      </svg>
+                      Completado
+                    </span>
+                  } @else {
+                    <span class="plan-card__badge">En curso</span>
+                  }
+                </div>
+              </div>
+
+              <!-- Progress -->
+              <div class="plan-card__progress">
+                <div class="progress-bar">
+                  <div class="progress-bar__fill" [style.width.%]="porcentaje(plan)"></div>
+                </div>
+                <span class="progress-pct font-body">{{ porcentaje(plan) }}%</span>
+              </div>
+
+              <!-- Stats row -->
+              <div class="plan-card__stats">
+                <div class="plan-stat">
+                  <span class="plan-stat__label font-body">Recibido</span>
+                  <span class="plan-stat__value font-display text-[#22c55e]">
+                    {{ simbolo(plan.tipoMoneda) }} {{ plan.montoRecibido | number:'1.2-2' }}
+                  </span>
+                </div>
+                <div class="plan-stat">
+                  <span class="plan-stat__label font-body">Faltante</span>
+                  <span class="plan-stat__value font-display text-[rgba(255,255,255,0.55)]">
+                    {{ simbolo(plan.tipoMoneda) }} {{ plan.metaRestante | number:'1.2-2' }}
+                  </span>
+                </div>
+                <!-- Click hint -->
+                @if (!plan.metaAlcanzada) {
+                  <div class="plan-card__hint font-body">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"/>
+                      <line x1="12" y1="8" x2="12" y2="12"/>
+                      <line x1="12" y1="16" x2="12.01" y2="16"/>
+                    </svg>
+                    Clic para ahorrar
+                  </div>
+                }
+              </div>
+
+            </div>
+          }
+        </div>
+      }
+
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="dashboard-footer font-body">
+      FLAYEXCLAY © — AHORRO MINDSET
+    </footer>
+
+  </main>
+</div>
+
+<!-- ===== MODAL REGISTRO DE AHORRO ===== -->
+@if (showModal()) {
+  <div class="modal-overlay" (click)="cerrarModal()">
+    <div class="modal" (click)="$event.stopPropagation()"
+         role="dialog" aria-modal="true" aria-labelledby="modal-title">
+
+      <!-- Header -->
+      <div class="modal__header">
+        <h3 class="modal__title font-display" id="modal-title">Registro de Ahorro</h3>
+        <button class="modal__close" (click)="cerrarModal()" aria-label="Cerrar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal__divider"></div>
+
+      <!-- Plan seleccionado preview -->
+      @if (planSeleccionado(); as plan) {
+        <div class="modal__plan-preview">
+          <div class="modal__plan-preview-left">
+            <span class="modal__plan-label font-body">META — {{ mesEs(plan.mes) }}</span>
+            <span class="modal__plan-name font-body">{{ plan.tipoMoneda }}</span>
+          </div>
+          <span class="modal__plan-amount font-display">
+            {{ plan.metaMensual | number:'1.2-2' }}
+          </span>
+        </div>
+      }
+
+      <!-- Error -->
+      @if (errorMsg()) {
+        <div class="alert alert--error alert--modal animate-[fadeIn_0.3s_ease]">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          {{ errorMsg() }}
+        </div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="guardar()" novalidate class="modal__form">
+
+        <!-- Fecha -->
+        <div class="modal__field">
+          <label class="modal__label font-body" for="fecha">FECHA DE AHORRO</label>
+          <div class="modal__input-wrap" [class.modal__input-wrap--error]="fecha.invalid && fecha.touched">
+            <input id="fecha" type="date"
+                   class="modal__input modal__input--date font-body"
+                   formControlName="fecha">
+          </div>
+          @if (fecha.invalid && fecha.touched) {
+            <p class="modal__error font-body">La fecha es requerida</p>
+          }
+        </div>
+
+        <!-- Monto -->
+        <div class="modal__field">
+          <label class="modal__label font-body" for="monto">
+            MONTO A REGISTRAR ({{ simbolo(planSeleccionado()?.tipoMoneda ?? 'PEN') }})
+          </label>
+          <div class="modal__input-wrap" [class.modal__input-wrap--error]="monto.invalid && monto.touched">
+            <input id="monto" type="number" min="0.01" step="0.01"
+                   class="modal__input font-body"
+                   placeholder="0.00"
+                   formControlName="monto">
+          </div>
+          @if (monto.invalid && monto.touched) {
+            <p class="modal__error font-body">
+              @if (monto.errors?.['required']) { El monto es requerido }
+              @else { El monto debe ser mayor a 0 }
+            </p>
+          }
+        </div>
+
+        <!-- Actions -->
+        <div class="modal__actions">
+          <button type="button" class="btn-cancel font-body" (click)="cerrarModal()">
+            Cancelar
+          </button>
+          <button type="submit" class="btn-save font-display" [disabled]="isSaving()">
+            @if (isSaving()) {
+              <span class="spinner"></span>
+              Guardando...
+            } @else {
+              Ahorrar
+            }
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+}
